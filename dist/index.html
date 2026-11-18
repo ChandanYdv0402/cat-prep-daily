@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7f7fb">
-  <meta name="description" content="A daily CAT practice set with worked solutions for QA, DILR and VARC.">
+  <meta name="description" content="Ten days of CAT practice with worked solutions for QA, DILR and VARC.">
   <title>CAT Prep Daily</title>
   <link rel="stylesheet" href="styles.css">
   <script src="question-bank.js" defer></script>
@@ -15,7 +15,6 @@
   <header class="masthead">
     <div class="masthead-inner">
       <a class="brand" href="./"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>CAT Prep Daily</a>
-      <span id="bank-label" class="bank-label" hidden></span>
     </div>
   </header>
   <main class="workspace" id="main">
@@ -23,7 +22,7 @@
       <div class="hero-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="hero-inner">
         <p id="hero-date" class="hero-date"></p>
-        <h1 id="page-title">Daily practice</h1>
+        <h1 id="page-title" tabindex="-1">CAT 2026 practice plan</h1>
         <p id="hero-summary" class="hero-summary"></p>
       </div>
     </section>
@@ -54,7 +53,7 @@
           </nav>
           <button id="today-button" class="text-button today-button" type="button" hidden>Back to today</button>
         </section>
-        <section class="side-card" aria-labelledby="progress-title">
+        <section id="progress-card" class="side-card" aria-labelledby="progress-title">
           <div class="side-heading">
             <h2 id="progress-title">Your progress</h2>
             <span id="progress-text" class="progress-text" aria-live="polite">0 / 0</span>
