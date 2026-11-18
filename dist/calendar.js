@@ -69,7 +69,10 @@
         const events = eventsByDay.get(key) ?? [];
         const cell = node(events.length ? "button" : "span", "cal-cell");
         if (key.slice(0, 7) !== monthKey) cell.classList.add("out");
-        if (key === today) cell.classList.add("today");
+        if (key === today) {
+          cell.classList.add("today");
+          cell.setAttribute("aria-current", "date");
+        }
         cell.append(node("span", "", Number(key.slice(-2))));
         const marks = node("span", "marks");
         marks.setAttribute("aria-hidden", "true");

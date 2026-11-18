@@ -1,9 +1,5 @@
 .coding-workspace {
   --coding-aside: minmax(310px, 32%);
-  --lc-accent: #e0a43a;
-  --cc-accent: #c49c75;
-  --cf-accent: #73b2cf;
-  --heat: #a7c0c4;
 }
 .coding-hero, .coding-layout {
   display: grid;
@@ -51,10 +47,7 @@
 .profile-card + .profile-card { border-left: 1px solid var(--rule); }
 .profile-heading { display: flex; align-items: center; gap: 7px; }
 .profile-heading h3 { font-size: 29px; line-height: 1.1; }
-.platform-tag { display: inline-block; flex: none; border: 1px solid currentColor; padding: 2px 4px; font: 700 10px/1.2 ui-monospace, monospace; }
-.platform-tag.leetcode { color: var(--lc-accent); }
-.platform-tag.codechef { color: var(--cc-accent); }
-.platform-tag.codeforces { color: var(--cf-accent); }
+.platform-tag { display: inline-block; flex: none; border: 1px solid var(--rule); color: var(--muted); padding: 2px 4px; font: 700 10px/1.2 ui-monospace, monospace; }
 .profile-handle { display: inline-block; color: var(--muted); text-decoration: none; margin-top: 5px; font-size: 12px; overflow-wrap: anywhere; }
 .profile-count { display: flex; align-items: baseline; gap: 6px; margin-top: 10px; }
 .profile-count strong { font: 45px/.96 var(--serif); font-variant-numeric: tabular-nums; }
@@ -70,11 +63,11 @@
 .heat-month { align-self: end; }
 .heat-days span { align-self: center; }
 .heat-cell { display: block; aspect-ratio: 1; min-width: 0; border: 0; padding: 0; background: var(--surface); }
-.heat-cell[data-level="0"] { background: #434240; }
-.heat-cell[data-level="1"] { background: #5c6666; }
-.heat-cell[data-level="2"] { background: #718889; }
-.heat-cell[data-level="3"] { background: #8ca7aa; }
-.heat-cell[data-level="4"] { background: var(--heat); }
+.heat-cell[data-level="0"] { background: #454545; }
+.heat-cell[data-level="1"] { background: #747474; }
+.heat-cell[data-level="2"] { background: #a0a0a0; }
+.heat-cell[data-level="3"] { background: #c4c4c4; }
+.heat-cell[data-level="4"] { background: var(--signal); }
 .heat-cell[data-level="unknown"] { background: var(--surface); }
 .heat-cell[data-level="future"] { background: transparent; }
 .heat-cell:focus-visible { outline-offset: 1px; }
