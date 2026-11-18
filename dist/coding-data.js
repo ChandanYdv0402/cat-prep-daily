@@ -9,7 +9,8 @@
   };
 
   async function load() {
-    const response = await fetch("api/coding", { cache: "no-store", signal: AbortSignal.timeout(90000) });
+    const feed = document.querySelector('meta[name="coding-feed"]')?.content ?? "api/coding";
+    const response = await fetch(feed, { cache: "no-store", signal: AbortSignal.timeout(90000) });
     if (!response.ok) throw new Error("Coding data request failed");
     return response.json();
   }
