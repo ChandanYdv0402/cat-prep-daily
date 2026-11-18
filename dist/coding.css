@@ -29,6 +29,7 @@
 .coding-heading h2 { font-size: clamp(29px, 3vw, 40px); }
 .coding-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 11px; }
 .coding-status, .coding-message { color: var(--muted); margin: 0; font-size: 13px; line-height: 1.45; }
+.leaderboard-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
 .coding-filter { display: flex; align-items: center; gap: 8px; font-size: 12px; white-space: nowrap; color: var(--muted); }
 .coding-filter select {
   min-height: 35px;

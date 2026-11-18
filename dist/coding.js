@@ -4,6 +4,7 @@
   const data = window.CodingData;
   const calendar = window.DashboardCalendar;
   const number = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 });
+  const ratingNumber = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 3 });
   const contestDate = new Intl.DateTimeFormat("en-IN", {
     timeZone: "Asia/Kolkata", weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit",
   });
@@ -14,6 +15,10 @@
   const weeks = 18;
   const msPerDay = 86_400_000;
   const byId = id => document.getElementById(id);
+  const leaderboardMetric = byId("leaderboard-metric");
+  const leaderboardPlatform = byId("leaderboard-platform");
+  let solvedPlatform = leaderboardPlatform.value;
+  let ratingPlatform;
   const state = { players: [], activity: {}, contests: [], contestStatus: "loading", refreshFailed: false };
   let countdownContest = null;
   let countdownDigits = [];
@@ -40,12 +45,9 @@
   const mine = () => state.players.find(player => player.name === "Chandan");
   const fmt = value => Number.isFinite(value) ? number.format(value) : "—";
 
-  function totals(player) {
+  function totalSolved(player) {
     const current = Object.values(player.stats);
-    return {
-      solved: current.length ? current.reduce((sum, item) => sum + item.solved, 0) : null,
-      points: current.length ? current.reduce((sum, item) => sum + item.points, 0) : null,
-    };
+    return current.length ? current.reduce((sum, item) => sum + item.solved, 0) : null;
   }
 
   function renderProfiles() {
@@ -81,35 +83,43 @@
       return item;
     });
     byId("coding-profiles").replaceChildren(...items);
-    const { solved } = totals(player);
+    const solved = totalSolved(player);
     byId("coding-summary").textContent = solved == null
       ? "LeetCode, CodeChef and Codeforces"
       : fmt(solved) + " problems solved across linked profiles";
   }
 
   function renderLeaderboard() {
-    const platform = byId("leaderboard-platform").value;
-    const all = platform === "all";
-    byId("leaderboard-stat").textContent = all ? "Points" : "Rating";
+    const metric = leaderboardMetric.value;
+    const platform = leaderboardPlatform.value;
+    const rating = metric === "rating";
+    byId("leaderboard-stat").textContent = rating ? "Rating" : "Problems solved";
     const members = state.players.length ? state.players : data.names.map(name => ({ name, stats: {} }));
-    const rows = members.map(player => ({
-      player, stats: all ? totals(player) : player.stats[platform],
-    })).sort((a, b) => (b.stats?.solved ?? -1) - (a.stats?.solved ?? -1));
-    let previousSolved;
+    const rows = members.map(player => {
+      const value = platform === "all" ? totalSolved(player) : player.stats[platform]?.[metric];
+      return { player, score: Number.isFinite(value) ? value : null };
+    }).sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+    let previousScore;
     let rank = 0;
-    byId("coding-leaderboard").replaceChildren(...rows.map(({ player, stats }, index) => {
+    byId("coding-leaderboard").replaceChildren(...rows.map(({ player, score }, index) => {
       const row = node("tr", player.name === "Chandan" ? "leaderboard-me" : "");
-      const solved = stats?.solved;
-      if (solved !== previousSolved) rank = index + 1;
-      previousSolved = solved;
+      if (score !== previousScore) rank = index + 1;
+      previousScore = score;
       const label = node("th", "", player.name);
       label.scope = "row";
       if (player.name === "Chandan") label.append(node("span", "you-label", "You"));
-      const metric = all ? stats?.points : stats?.rating;
-      row.append(node("td", "", Number.isFinite(solved) ? rank : "—"), label,
-        node("td", "", fmt(solved)), node("td", "", fmt(metric)));
+      const display = score === null ? "—" : (rating ? ratingNumber : number).format(score);
+      row.append(node("td", "", score === null ? "—" : rank), label, node("td", "", display));
       return row;
     }));
+  }
+
+  function switchLeaderboardMetric() {
+    const rating = leaderboardMetric.value === "rating";
+    leaderboardPlatform.options[0].disabled = rating;
+    const defaultRatingPlatform = solvedPlatform === "all" ? "leetcode" : solvedPlatform;
+    leaderboardPlatform.value = rating ? ratingPlatform ?? defaultRatingPlatform : solvedPlatform;
+    renderLeaderboard();
   }
 
   function renderHeatmap() {
@@ -292,7 +302,12 @@
     }
   }
 
-  byId("leaderboard-platform").addEventListener("change", renderLeaderboard);
+  leaderboardMetric.addEventListener("change", switchLeaderboardMetric);
+  leaderboardPlatform.addEventListener("change", () => {
+    if (leaderboardMetric.value === "rating") ratingPlatform = leaderboardPlatform.value;
+    else solvedPlatform = leaderboardPlatform.value;
+    renderLeaderboard();
+  });
   byId("heatmap-platform").addEventListener("change", renderHeatmap);
   byId("coding-refresh").addEventListener("click", sync);
   setInterval(() => {

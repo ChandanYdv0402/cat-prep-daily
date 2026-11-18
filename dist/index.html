@@ -62,16 +62,22 @@
         <section aria-labelledby="leaderboard-title">
           <div class="section-heading coding-heading">
             <h2 id="leaderboard-title">Friends leaderboard</h2>
-            <label class="coding-filter">Platform <select id="leaderboard-platform">
-              <option value="all">All platforms</option>
-              <option value="leetcode">LeetCode</option>
-              <option value="codechef">CodeChef</option>
-              <option value="codeforces">Codeforces</option>
-            </select></label>
+            <div class="leaderboard-filters">
+              <label class="coding-filter">Rank by <select id="leaderboard-metric">
+                <option value="solved">Problems solved</option>
+                <option value="rating">Rating</option>
+              </select></label>
+              <label class="coding-filter">Platform <select id="leaderboard-platform">
+                <option value="all">All platforms</option>
+                <option value="leetcode">LeetCode</option>
+                <option value="codechef">CodeChef</option>
+                <option value="codeforces">Codeforces</option>
+              </select></label>
+            </div>
           </div>
           <div class="coding-table-wrap">
             <table class="coding-table">
-              <thead><tr><th scope="col">Rank</th><th scope="col">Coder</th><th scope="col">Solved</th><th scope="col" id="leaderboard-stat">Points</th></tr></thead>
+              <thead><tr><th scope="col">Rank</th><th scope="col">Coder</th><th scope="col" id="leaderboard-stat" aria-sort="descending">Problems solved</th></tr></thead>
               <tbody id="coding-leaderboard"></tbody>
             </table>
           </div>
