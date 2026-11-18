@@ -1,4 +1,5 @@
 import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { collectCoding } from "./coding-sources.mjs";
@@ -23,9 +24,17 @@ if (!feed.players.some(player => Object.keys(player.stats).length)) {
 await mkdir(output);
 await cp(join(project, "dist"), output, { recursive: true, force: false, errorOnExist: true });
 
-const page = join(output, "index.html");
-const html = await readFile(page, "utf8");
-await writeFile(page, html.replace("<head>", '<head>\n  <meta name="coding-feed" content="coding-data.json">'));
+const assetVersion = createHash("sha256");
+for (const asset of ["styles.css", "coding.css", "calendar.css", "coding-data.js", "coding.js", "calendar.js", "question-bank.js", "plan-art.js", "app.js"]) {
+  assetVersion.update(await readFile(join(output, asset)));
+}
+const version = assetVersion.digest("hex").slice(0, 12);
+for (const name of ["index.html", "cat.html"]) {
+  const page = join(output, name);
+  let html = await readFile(page, "utf8");
+  if (name === "index.html") html = html.replace("<head>", '<head>\n  <meta name="coding-feed" content="coding-data.json">');
+  await writeFile(page, html.replace(/((?:href|src)="[\w.-]+\.(?:css|js))"/g, '$1?v=' + version + '"'));
+}
 await writeFile(join(output, "coding-data.json"), JSON.stringify({
   checkedAt: feed.checkedAt,
   players: feed.players,
